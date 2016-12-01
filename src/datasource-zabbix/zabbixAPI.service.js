@@ -352,6 +352,7 @@ function ZabbixAPIServiceFactory(alertSrv, zabbixAPICoreService) {
     getEvents(objectids, timeFrom, timeTo, showEvents) {
       var params = {
         output: 'extend',
+        selectTags: 'extend',
         time_from: timeFrom,
         time_till: timeTo,
         objectids: objectids,
