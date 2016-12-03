@@ -1,0 +1,12 @@
+{
+  "type": "panel",
+  "name": "Zabbix Events",
+  "id": "alexanderzobnin-zabbix-events-panel",
+
+  "info": {
+    "author": {
+      "name": "Alexander Zobnin",
+      "url": "https://github.com/alexanderzobnin/grafana-zabbix"
+    }
+  }
+}

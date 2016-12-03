@@ -17,6 +17,7 @@ module.exports = function(grunt) {
           '**/*',
           '!datasource-zabbix/*.js',
           '!panel-triggers/*.js',
+          '!panel-events/*.js',
           '!components/*.js',
           '!module.js',
           '!**/*.scss'
@@ -53,6 +54,7 @@ module.exports = function(grunt) {
           src: [
             'datasource-zabbix/*.js',
             'panel-triggers/*.js',
+            'panel-events/*.js',
             'components/*.js',
             'module.js',
           ],
@@ -96,6 +98,7 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'dist/panel-triggers/css/panel_triggers.css' : 'src/panel-triggers/sass/panel_triggers.scss',
+          'dist/panel-events/css/panel_events.css' : 'src/panel-events/sass/panel_events.scss',
         }
       }
     },

@@ -1,0 +1,129 @@
+<div class="triggers-panel-container">
+  <div class="triggers-panel-header-bg"></div>
+  <div class="triggers-panel-scroll">
+    <table class="triggers-panel-table">
+      <thead>
+        <tr>
+          <th ng-if="ctrl.panel.hostField" style="width: 15%">
+            <div class="triggers-panel-table-header-inner pointer">
+              Host
+            </div>
+          </th>
+          <th ng-if="ctrl.panel.eventIdField" style="width: 85px">
+            <div class="triggers-panel-table-header-inner pointer">
+              Event Id
+            </div>
+          </th>
+          <th ng-if="ctrl.panel.statusField" style="width: 85px">
+            <div class="triggers-panel-table-header-inner pointer">Status</div>
+          </th>
+          <th ng-if="ctrl.panel.severityField" style="width: 120px">
+            <div class="triggers-panel-table-header-inner pointer">Severity</div>
+          </th>
+          <th ng-if="ctrl.panel.severityField" style="width: 120px">
+            <div class="triggers-panel-table-header-inner pointer">Resolved?</div>
+          </th>
+          <th>
+            <div class="triggers-panel-table-header-inner pointer">Issue</div>
+          </th>
+          <th ng-if="ctrl.panel.timestampField" style="width: 220px">
+            <div class="triggers-panel-table-header-inner pointer">TimeStamp</div>
+          </th>
+          <th ng-if="ctrl.panel.ageField" style="width: 180px">
+            <div class="triggers-panel-table-header-inner pointer">Age</div>
+          </th>
+          <th ng-if="ctrl.panel.infoField" style="width: 100px">
+            <div class="triggers-panel-table-header-inner pointer">Info</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="event in ctrl.eventList">
+
+          <td ng-if="ctrl.panel.hostField">
+            <div>
+              <span><strong>{{event.host}}</strong></span>
+            </div>
+          </td>
+
+          <td ng-if="ctrl.panel.eventIdField">
+            {{event.eventid}}
+          </td>
+
+          <td ng-if="ctrl.panel.statusField" style="background-color: {{event.color}}; color: white">
+            <div>
+              {{ctrl.eventStatusMap[event.value]}}
+            </div>
+          </td>
+
+          <td ng-if="ctrl.panel.severityField" style="background-color: {{event.color}}; color: white">
+            <div>
+              {{ctrl.eventSeverityMap[event.severity]}}
+            </div>
+          </td>
+
+          <td ng-if="ctrl.panel.resolvedStatusField" style="background-color: {{event.color}}; color: white">
+            <div>
+              {{event.resolvedStatus}}
+            </div>
+          </td>
+
+          <td style="background-color: {{event.color}}; color: white">
+            <div>
+              {{event.problem}}
+            </div>
+
+            <div ng-if="event.module">
+              <div>
+                <small>Module: {{event.module}}</small>
+              </div>
+            </div>
+            <div ng-if="event.errorCode">
+              <div>
+                <small>ErrorCode: {{event.errorCode}}</small>
+              </div>
+            </div>
+            <div ng-if="event.resourceId">
+              <div>
+                <small>ResourceId: {{event.resourceId}}</small>
+              </div>
+            </div>
+          </td>
+
+          <td ng-if="ctrl.panel.timestampField">
+            {{event.time}}
+          </td>
+
+          <td ng-if="ctrl.panel.ageField">
+            {{event.age}}
+          </td>
+
+          <td ng-if="ctrl.panel.infoField">
+
+            <!-- Trigger Url -->
+            <a  ng-if="trigger.url"
+                href="{{trigger.url}}"
+                target="_blank">
+              <i class="fa fa-external-link"></i>
+            </a>
+
+            <!-- Trigger state -->
+            <span ng-if="trigger.state === '1'"
+                  bs-tooltip="'{{trigger.error}}'">
+              <i class="fa fa-question-circle"></i>
+            </span>
+
+            <!-- Trigger acknowledges -->
+            <ack-tooltip
+              ack="event.acknowledges"
+              trigger="trigger"
+              on-ack="ctrl.acknowledgeTrigger"
+              context="ctrl">
+            </ack-tooltip>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="triggers-panel-footer"></div>
