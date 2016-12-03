@@ -378,14 +378,18 @@ class ZabbixAPIDatasource {
             let title = Number(event.value) ? 'Problem' : 'OK';
 
             let formatted_acknowledges = utils.formatAcknowledges(event.acknowledges);
+            let problem = '';
             let problemTag = _.find(event.tags, function(o) { return o.tag === "Problem"; });
+            if (!!problemTag) {
+              problem = problemTag.value;
+            }
             return {
               annotation: annotation,
               time: event.clock * 1000,
               title: title,
               tags: tags,
               //text: indexedTriggers[event.objectid].description + formatted_acknowledges
-              text: problemTag.value + formatted_acknowledges
+              text: problem + formatted_acknowledges
             };
           });
         });
