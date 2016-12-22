@@ -180,6 +180,7 @@ class EventPanelCtrl extends MetricsPanelCtrl {
               eventObj.tags = _.map(event.tags, 'value');
               eventObj.time = new Date(event.clock * 1000);
               let elapseSec = (Date.parse(new Date())/1000 - event.clock);
+              eventObj.elapseSec = elapseSec;
               if (elapseSec >= 86400) {
                 eventObj.age = Math.ceil((elapseSec/86400)) + " days";
               } else if (elapseSec >= 3600) {
@@ -227,9 +228,9 @@ class EventPanelCtrl extends MetricsPanelCtrl {
             if (self.panel.sortEventsBy.value === 'priority') {
               eventList = _.sortBy(eventList, 'priority').reverse();
             } else if (self.panel.sortEventsBy.value === 'age-dsc') {
-              eventList = _.sortBy(eventList, 'age').reverse();
+              eventList = _.sortBy(eventList, 'elapseSec').reverse();
             } else if (self.panel.sortEventsBy.value === 'age-asc') {
-              eventList = _.sortBy(eventList, 'age');
+              eventList = _.sortBy(eventList, 'elapseSec');
             }
 
             // Limit events number
