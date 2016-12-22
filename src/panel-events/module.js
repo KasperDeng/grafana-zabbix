@@ -26,6 +26,7 @@ var eventStatusMap = {
 };
 
 var eventSeverityMap = {
+  '0': 'NA',
   '1': 'Cleared',
   '2': 'Indeterminate',
   '3': 'Critical',
