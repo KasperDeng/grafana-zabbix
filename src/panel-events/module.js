@@ -19,7 +19,6 @@ import {eventPanelEditor} from './editor';
 import './ack-tooltip.directive';
 import './css/panel_events.css!';
 
-
 var eventStatusMap = {
   '0': 'OK',
   '1': 'Problem'
