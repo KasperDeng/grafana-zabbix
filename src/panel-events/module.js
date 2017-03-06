@@ -153,6 +153,10 @@ class EventPanelCtrl extends MetricsPanelCtrl {
           var getEvents = zabbix.getEvents(triggerid, timeFrom, timeTo, showEvents);
           return getEvents.then(eventList => {
             return _.map(eventList, event => {
+              if (showEvents && event.r_eventid !== "0") {
+                return null;
+              }
+
               let eventObj = event;
               //eventObj.host = _.map(event.hosts, 'name');
               eventObj.host = self._getEventTagValue(event, 'Host');
@@ -210,7 +214,7 @@ class EventPanelCtrl extends MetricsPanelCtrl {
             });
           }).then(eventList => {
             eventList = _.filter(eventList, event => {
-              if (event.tags.length === 8) { // TODO currently hardcode
+              if (event !== null && event.tags.length === 8) { // TODO currently hardcode
                 return event;
               }
             });
