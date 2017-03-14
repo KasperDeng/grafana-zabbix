@@ -164,16 +164,18 @@ class EventPanelCtrl extends MetricsPanelCtrl {
                 eventObj.host = event.hosts[0].name;
               }*/
               eventObj.severity = self._getEventTagValue(event, 'Severity');
+              let statusEvent = self._getEventTagValue(event, 'StatusEvent');
 
-              if (event.r_eventid !== "0") {
+              if (statusEvent === "Status Clearance Alarm Events") { // Alarm Clear Event
+                eventObj.color = self.panel.okEventColor;
+              } else if (event.r_eventid !== "0") {    // fixed by recovery event
                 eventObj.resolvedStatus = "Yes by " + event.r_eventid;
                 eventObj.color = self.panel.okEventColor;
-              } else {
+              } else { // Problem Event
                 eventObj.resolvedStatus = "No";
                 eventObj.color = self.panel.eventSeverity[eventObj.severity - 1].color;
               }
 
-              let statusEvent = self._getEventTagValue(event, 'StatusEvent');
               if (!!statusEvent) { //&& statusEvent === "Status Active Alarm Events"
                 eventObj.problem = self._getEventTagValue(event, 'Problem');
               }

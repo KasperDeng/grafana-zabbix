@@ -49,8 +49,8 @@ class EventPanelEditorCtrl {
     ];
 
     this.showEventsFields = [
-      { text: 'All',     value: [0,1] },
-      { text: 'OK',      value: [0] },
+      { text: 'All',      value: [0,1] },
+      { text: 'OK',       value: 0 },
       { text: 'Problems', value: 1 }
     ];
 
