@@ -71,7 +71,6 @@ var panelDefaults = {
 
 var defaultTimeFormat = "DD MMM YYYY HH:mm:ss";
 
-
 // [NOTE] CONSTS definitions for user specific alarm system.
 // Please adjust the event tags definition as per your application and alarm system.
 // Tags identified in the alarm event.
