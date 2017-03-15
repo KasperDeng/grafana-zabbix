@@ -71,6 +71,25 @@ var panelDefaults = {
 
 var defaultTimeFormat = "DD MMM YYYY HH:mm:ss";
 
+
+// [NOTE] CONSTS definitions for user specific alarm system.
+// Please adjust the event tags definition as per your application and alarm system.
+// Tags identified in the alarm event.
+const SEVERITY_EVENT_TAG = 'Severity';
+const STATUSEVENT_EVENT_TAG = 'StatusEvent';
+const HOST_EVENT_TAG = 'Host';
+const PROBLEM_EVENT_TAG = 'Problem';
+const MODULE_EVENT_TAG = 'Module';
+const ERRORCODE_EVENT_TAG = 'ErrorCode';
+const RESOURCEID_EVENT_TAG = 'ResourceId';
+const ALARM_CLEARANCE_VALUE = 'Status Clearance Alarm Events';
+const ALARM_RAISE_VALUE = 'Status Active Alarm Events';
+
+// Time constants
+const DAY_IN_SECOND = 86400;
+const HOUR_IN_SECOND = 3600;
+const MINUTE_IN_SECOND = 60;
+
 class EventPanelCtrl extends MetricsPanelCtrl {
 
   /** @ngInject */
@@ -120,6 +139,10 @@ class EventPanelCtrl extends MetricsPanelCtrl {
     return null;
   }
 
+  _isFixedEvent(event) {
+    return event.r_eventid !== "0";
+  }
+
   refreshData() {
     // clear loading/error state
     delete this.error;
@@ -153,20 +176,21 @@ class EventPanelCtrl extends MetricsPanelCtrl {
           var getEvents = zabbix.getEvents(triggerid, timeFrom, timeTo, showEvents);
           return getEvents.then(eventList => {
             return _.map(eventList, event => {
-              if (showEvents && event.r_eventid !== "0") {
+              if (showEvents && self._isFixedEvent(event)) {
                 return null;
               }
 
               let eventObj = event;
               //eventObj.host = _.map(event.hosts, 'name');
-              eventObj.host = self._getEventTagValue(event, 'Host');
+              // Use the HOST tag in the event which is node alarm originated
+              eventObj.host = self._getEventTagValue(event, HOST_EVENT_TAG);
               /*if (eventObj.host === null) {
                 eventObj.host = event.hosts[0].name;
               }*/
-              eventObj.severity = self._getEventTagValue(event, 'Severity');
-              let statusEvent = self._getEventTagValue(event, 'StatusEvent');
+              eventObj.severity = self._getEventTagValue(event, SEVERITY_EVENT_TAG);
+              let statusEvent = self._getEventTagValue(event, STATUSEVENT_EVENT_TAG);
 
-              if (statusEvent === "Status Clearance Alarm Events") { // Alarm Clear Event
+              if (statusEvent === ALARM_CLEARANCE_VALUE) { // Alarm Clear Event
                 eventObj.color = self.panel.okEventColor;
               } else if (event.r_eventid !== "0") {    // fixed by recovery event
                 eventObj.resolvedStatus = "Yes by " + event.r_eventid;
@@ -176,22 +200,23 @@ class EventPanelCtrl extends MetricsPanelCtrl {
                 eventObj.color = self.panel.eventSeverity[eventObj.severity - 1].color;
               }
 
-              if (!!statusEvent) { //&& statusEvent === "Status Active Alarm Events"
-                eventObj.problem = self._getEventTagValue(event, 'Problem');
+              if (!!statusEvent) { //&& statusEvent === ALARM_RAISE_VALUE
+                eventObj.problem = self._getEventTagValue(event, PROBLEM_EVENT_TAG);
               }
-              eventObj.module = self._getEventTagValue(event, 'Module');
-              eventObj.errorCode = self._getEventTagValue(event, 'ErrorCode');
-              eventObj.resourceId = self._getEventTagValue(event, 'ResourceId');
+              eventObj.module = self._getEventTagValue(event, MODULE_EVENT_TAG);
+              eventObj.errorCode = self._getEventTagValue(event, ERRORCODE_EVENT_TAG);
+              eventObj.resourceId = self._getEventTagValue(event, RESOURCEID_EVENT_TAG);
               eventObj.tags = _.map(event.tags, 'value');
               eventObj.time = new Date(event.clock * 1000);
+
               let elapseSec = (Date.parse(new Date())/1000 - event.clock);
               eventObj.elapseSec = elapseSec;
-              if (elapseSec >= 86400) {
-                eventObj.age = Math.ceil((elapseSec/86400)) + " days";
-              } else if (elapseSec >= 3600) {
-                eventObj.age = Math.ceil((elapseSec/3600)) + " hrs";
-              } else if (elapseSec >= 60) {
-                eventObj.age = Math.ceil((elapseSec/60)) + " mins";
+              if (elapseSec >= DAY_IN_SECOND) {
+                eventObj.age = Math.ceil((elapseSec/DAY_IN_SECOND)) + " days";
+              } else if (elapseSec >= HOUR_IN_SECOND) {
+                eventObj.age = Math.ceil((elapseSec/HOUR_IN_SECOND)) + " hrs";
+              } else if (elapseSec >= MINUTE_IN_SECOND) {
+                eventObj.age = Math.ceil((elapseSec/MINUTE_IN_SECOND)) + " mins";
               } else {
                 eventObj.age = Math.ceil(elapseSec) + " secs";
               }
